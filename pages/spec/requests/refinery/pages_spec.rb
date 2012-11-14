@@ -25,14 +25,14 @@ module Refinery
 
         it 'shows the homepage' do
           Refinery::PagesController.any_instance.stub(:find_page).and_return(:home_page)
-          visit '/'
+          get '/'
 
           standard_page_menu_items_exist?
         end
 
         it 'shows a show page' do
           Refinery::PagesController.any_instance.stub(:find_page).and_return(:about_page)
-          visit refinery.page_path(about_page)
+          get refinery.page_path(about_page)
 
           standard_page_menu_items_exist?
         end
@@ -43,7 +43,7 @@ module Refinery
 
         it 'shows the homepage' do
           Refinery::PagesController.any_instance.stub(:find_page).and_return(:home_page)
-          visit '/'
+          get '/'
 
           standard_page_menu_items_exist?
         end
@@ -54,7 +54,7 @@ module Refinery
 
         it 'shows the about page' do
           Refinery::PagesController.any_instance.stub(:find_page).and_return(:about_page)
-          visit refinery.page_path(about_page)
+          get refinery.page_path(about_page)
 
           standard_page_menu_items_exist?
         end
@@ -62,7 +62,7 @@ module Refinery
     end
 
     describe 'title set (without menu title or browser title)' do
-      before { visit '/about' }
+      before { get '/about' }
 
       it "shows title at the top of the page" do
         find("#body_content_title").text.should == about_page.title
@@ -91,13 +91,13 @@ module Refinery
         end
 
         it 'shows the menu_title in the menu' do
-          visit '/news'
+          get '/news'
 
           find(".selected").text.strip.should == page_mt.menu_title
         end
 
         it "does not effect browser title and page title" do
-          visit "/news"
+          get "/news"
 
           find("title").should have_content(page_mt.title)
           find("#body_content_title").text.should == page_mt.title
@@ -113,7 +113,7 @@ module Refinery
         end
 
         it 'the friendly_id and menu are reverted to match the title' do
-          visit '/company-news'
+          get '/company-news'
 
           current_path.should == '/company-news'
           find(".selected").text.strip.should == page_mt.title
@@ -129,13 +129,13 @@ module Refinery
         Refinery::Page.stub(:fast_menu).and_return([page_bt])
       end
       it 'should have the browser_title in the title tag' do
-        visit '/about-us'
+        get '/about-us'
 
         page.find("title").text == page_bt.title
       end
 
       it 'should not effect page title and menu title' do
-        visit '/about-us'
+        get '/about-us'
 
         find("#body_content_title").text.should == page_bt.title
         find(".selected").text.strip.should == page_bt.title
@@ -150,7 +150,7 @@ module Refinery
 
       describe 'not set' do
         it 'makes friendly_id from title' do
-          visit '/about-us'
+          get '/about-us'
 
           current_path.should == '/about-us'
         end
@@ -163,7 +163,7 @@ module Refinery
         end
 
         it 'should make and use a new friendly_id' do
-          visit '/about-custom'
+          get '/about-custom'
 
           current_path.should == '/about-custom'
         end
@@ -184,7 +184,7 @@ module Refinery
     # Maybe we should clean up this spec file a bit...
     describe "home page" do
       it "succeeds" do
-        visit "/"
+        get "/"
 
         within ".selected" do
           page.should have_content(home_page.title)
@@ -195,7 +195,7 @@ module Refinery
 
     describe "content page" do
       it "succeeds" do
-        visit "/about"
+        get "/about"
 
         page.should have_content(home_page.title)
         within ".selected > a" do
@@ -212,7 +212,7 @@ module Refinery
       end
 
       it "succeeds" do
-        visit refinery.url_for(submenu_page.url)
+        get refinery.url_for(submenu_page.url)
         page.should have_content(home_page.title)
         page.should have_content(about_page.title)
         within ".selected * > .selected a" do
@@ -228,7 +228,7 @@ module Refinery
       end
 
       it "succeeds" do
-        visit refinery.url_for(special_page.url)
+        get refinery.url_for(special_page.url)
 
         page.should have_content(home_page.title)
         page.should have_content(about_page.title)
@@ -250,7 +250,7 @@ module Refinery
       end
 
       it "succeeds" do
-        visit refinery.url_for(special_page.url)
+        get refinery.url_for(special_page.url)
 
         page.should have_content(home_page.title)
         page.should have_content(about_page.title)
@@ -268,7 +268,7 @@ module Refinery
       end
 
       it "succeeds" do
-        visit refinery.page_path(hidden_page)
+        get refinery.page_path(hidden_page)
 
         page.should have_content(home_page.title)
         page.should have_content(about_page.title)
@@ -291,7 +291,7 @@ module Refinery
       end
 
       it "succeeds" do
-        visit "/about"
+        get "/about"
 
         within ".selected * > .selected a" do
           page.should have_content(child_page.title)
@@ -322,19 +322,19 @@ module Refinery
         end
 
         it "should recognise when default locale is in the path" do
-          visit "/en/#{en_page_slug}"
+          get "/en/#{en_page_slug}"
 
           current_path.should == "/en/#{en_page_slug}"
         end
 
         it "should redirect to default locale slug" do
-          visit "/#{ru_page_slug_encoded}"
+          get "/#{ru_page_slug_encoded}"
 
           current_path.should == "/#{en_page_slug}"
         end
 
         it "should redirect to second locale slug" do
-          visit "/ru/#{en_page_slug}"
+          get "/ru/#{en_page_slug}"
 
           current_path.should == "/ru/#{ru_page_slug_encoded}"
         end
@@ -357,7 +357,7 @@ module Refinery
           end
 
           it "should redirect to localized url" do
-            visit "/ru/#{en_page_slug}/#{nested_page_slug}"
+            get "/ru/#{en_page_slug}/#{nested_page_slug}"
 
             current_path.should == "/ru/#{ru_page_slug_encoded}/#{nested_page_slug}"
           end

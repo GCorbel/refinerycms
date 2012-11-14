@@ -5,14 +5,14 @@ module Refinery
     refinery_login_with :refinery_user
 
     it "have logout link" do
-      visit refinery.admin_dashboard_path
+      get refinery.admin_dashboard_path
 
       page.should have_content("Log out")
       page.should have_selector("a[href='/refinery/logout']")
     end
 
     context "when in backend" do
-      before { visit refinery.admin_dashboard_path }
+      before { get refinery.admin_dashboard_path }
 
       it "have a 'switch to your website button'" do
         page.should have_content("Switch to your website")
@@ -31,7 +31,7 @@ module Refinery
         # make a page in order to avoid 404
         FactoryGirl.create(:page, :link_url => "/")
 
-        visit refinery.root_path
+        get refinery.root_path
       end
 
       it "have a 'switch to your website editor' button" do

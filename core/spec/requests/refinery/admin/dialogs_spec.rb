@@ -6,14 +6,14 @@ module Refinery
 
     context "links" do
       it "have iframe src" do
-        visit refinery.admin_dialog_path('Link')
+        get refinery.admin_dialog_path('Link')
         page.should have_selector("iframe[src='/refinery/pages_dialogs/link_to']")
       end
     end
 
     context "images" do
       it "have iframe src" do
-        visit refinery.admin_dialog_path('Image')
+        get refinery.admin_dialog_path('Image')
         page.should have_selector("iframe[src='/refinery/images/insert?modal=true']")
       end
     end
@@ -22,7 +22,7 @@ module Refinery
       it "404s" do
         Admin::DialogsController.any_instance.should_receive(:error_404).once
 
-        visit refinery.admin_dialog_path('a')
+        get refinery.admin_dialog_path('a')
       end
     end
   end

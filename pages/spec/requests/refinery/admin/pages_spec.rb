@@ -22,14 +22,14 @@ module Refinery
 
       context "when no pages" do
         it "invites to create one" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
           page.should have_content(%q{There are no pages yet. Click "Add new page" to add your first page.})
         end
       end
 
       describe "action links" do
         it "shows add new page link" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
 
           within "#actions" do
             page.should have_content("Add new page")
@@ -39,7 +39,7 @@ module Refinery
 
         context "when no pages" do
           it "doesn't show reorder pages link" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#actions" do
               page.should have_no_content("Reorder pages")
@@ -52,7 +52,7 @@ module Refinery
           before { 2.times { |i| Page.create :title => "Page #{i}" } }
 
           it "shows reorder pages link" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#actions" do
               page.should have_content("Reorder pages")
@@ -71,7 +71,7 @@ module Refinery
             before do
               Refinery::Pages.stub(:auto_expand_admin_tree).and_return(false)
 
-              visit refinery.admin_pages_path
+              get refinery.admin_pages_path
             end
 
             it "show parent page" do
@@ -103,7 +103,7 @@ module Refinery
             before do
               Refinery::Pages.stub(:auto_expand_admin_tree).and_return(true)
 
-              visit refinery.admin_pages_path
+              get refinery.admin_pages_path
             end
 
             it "shows children" do
@@ -116,7 +116,7 @@ module Refinery
 
       describe "new/create" do
         it "allows to create page" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
 
           click_link "Add new page"
 
@@ -137,7 +137,7 @@ module Refinery
         end
 
         it "includes menu title field" do
-          visit refinery.new_admin_page_path
+          get refinery.new_admin_page_path
 
           fill_in "Title", :with => "My first page"
           fill_in "Menu title", :with => "The first page"
@@ -153,7 +153,7 @@ module Refinery
         before do
           Page.create :title => "Update me"
 
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
           page.should have_content("Update me")
         end
 
@@ -197,7 +197,7 @@ module Refinery
           before { Page.create :title => 'Preview me' }
 
           it 'will show the preview changes in a new window', :js do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             find('a[tooltip^=Edit]').click
             fill_in "Title", :with => "Some changes I'm unsure what they will look like"
@@ -207,7 +207,7 @@ module Refinery
           end
 
           it 'will not save the preview changes', :js do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             find('a[tooltip^=Edit]').click
             fill_in "Title", :with => "Some changes I'm unsure what they will look like"
@@ -220,7 +220,7 @@ module Refinery
 
           # Regression test for previewing after save-and_continue
           it 'will show the preview in a new window after save-and-continue', :js do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             find('a[tooltip^=Edit]').click
             fill_in "Title", :with => "Save this"
@@ -238,7 +238,7 @@ module Refinery
 
         context 'a brand new page' do
           it "will not save when just previewing", :js do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             click_link "Add new page"
             fill_in "Title", :with => "My first page"
@@ -255,7 +255,7 @@ module Refinery
           let!(:nested_page) { parent_page.children.create :title => 'Preview Me' }
 
           it "works like an un-nested page", :js do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#page_#{nested_page.id}" do
               find('a[tooltip^=Edit]').click
@@ -274,7 +274,7 @@ module Refinery
           before { Page.create :title => "Delete me" }
 
           it "will show delete button" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             click_link "Remove this page forever"
 
@@ -288,7 +288,7 @@ module Refinery
           before { Page.create :title => "Indestructible", :deletable => false }
 
           it "wont show delete button" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             page.should have_no_content("Remove this page forever")
             page.should have_no_selector("a[href='/refinery/pages/indestructible']")
@@ -300,7 +300,7 @@ module Refinery
         before { Page.create :title => "I was here first" }
 
         it "will append nr to url path" do
-          visit refinery.new_admin_page_path
+          get refinery.new_admin_page_path
 
           fill_in "Title", :with => "I was here first"
           click_button "Save"
@@ -328,7 +328,7 @@ module Refinery
 
         describe "add a page with title for default locale" do
           before do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
             click_link "Add new page"
             fill_in "Title", :with => "News"
             click_button "Save"
@@ -355,7 +355,7 @@ module Refinery
           end
 
           it "shows in frontend menu for 'en' locale" do
-            visit "/"
+            get "/"
 
             within "#menu" do
               page.should have_content('News')
@@ -364,7 +364,7 @@ module Refinery
           end
 
           it "doesn't show in frontend menu for 'ru' locale" do
-            visit "/ru"
+            get "/ru"
 
             within "#menu" do
               # we should only have the home page in the menu
@@ -395,7 +395,7 @@ module Refinery
 
           it "succeeds" do
             news_page.destroy!
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             click_link "Add new page"
             within "#switch_locale_picker" do
@@ -418,7 +418,7 @@ module Refinery
           end
 
           it "shows both locale flags for page" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#page_#{news_page.id}" do
               page.should have_css("img[src='/assets/refinery/icons/flags/en.png']")
@@ -427,7 +427,7 @@ module Refinery
           end
 
           it "shows title in admin menu in current admin locale" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#page_#{news_page.id}" do
               page.should have_content(en_page_title)
@@ -435,7 +435,7 @@ module Refinery
           end
 
           it "uses the slug from the default locale in admin" do
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
 
             within "#page_#{news_page.id}" do
               page.find_link('Edit this page')[:href].should include(en_page_slug)
@@ -443,7 +443,7 @@ module Refinery
           end
 
           it "shows correct language and slugs for default locale" do
-            visit "/"
+            get "/"
 
             within "#menu" do
               page.find_link(news_page.title)[:href].should include(en_page_slug)
@@ -451,7 +451,7 @@ module Refinery
           end
 
           it "shows correct language and slugs for second locale" do
-            visit "/ru"
+            get "/ru"
 
             within "#menu" do
               page.find_link(ru_page_title)[:href].should include(ru_page_slug_encoded)
@@ -471,7 +471,7 @@ module Refinery
 
           before do
             ru_page
-            visit refinery.admin_pages_path
+            get refinery.admin_pages_path
           end
 
           it "succeeds" do
@@ -512,7 +512,7 @@ module Refinery
           end
 
           it "shows in frontend menu for 'ru' locale" do
-            visit "/ru"
+            get "/ru"
 
             within "#menu" do
               page.should have_content(ru_page_title)
@@ -521,7 +521,7 @@ module Refinery
           end
 
           it "won't show in frontend menu for 'en' locale" do
-            visit "/"
+            get "/"
 
             within "#menu" do
               # we should only have the home page in the menu
@@ -537,7 +537,7 @@ module Refinery
         end
 
         it "adds new page part" do
-          visit refinery.new_admin_page_path
+          get refinery.new_admin_page_path
           click_link "add_page_part"
 
           within "#new_page_part_dialog" do
@@ -567,7 +567,7 @@ module Refinery
             end
 
             specify 'sub page should inherit them' do
-              visit refinery.admin_pages_path
+              get refinery.admin_pages_path
 
               within '.nested' do
                 click_link 'Edit this page'
@@ -597,7 +597,7 @@ module Refinery
         end
 
         specify "html shouldn't be stripped" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
           click_link "Edit this page"
           page.should have_content("header class='regression'")
         end
@@ -609,7 +609,7 @@ module Refinery
 
       describe "add page to main locale" do
         it "doesn't succeed" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
 
           click_link "Add new page"
 
@@ -627,7 +627,7 @@ module Refinery
         end
 
         it "succeeds" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
 
           click_link "Add new page"
 
@@ -646,7 +646,7 @@ module Refinery
         before { Page.create :title => 'Default Page' }
 
         it "doesn't succeed" do
-          visit refinery.admin_pages_path
+          get refinery.admin_pages_path
 
           click_link "Remove this page forever"
 
@@ -684,14 +684,14 @@ module Refinery
             before { Refinery::Pages.absolute_page_links = false }
 
             it "shows Russian pages if we're editing the Russian locale" do
-              visit refinery.link_to_admin_pages_dialogs_path(:wymeditor => true, :switch_locale => :ru)
+              get refinery.link_to_admin_pages_dialogs_path(:wymeditor => true, :switch_locale => :ru)
 
               page.should have_content("About Ru")
               page.should have_selector("a[href='/ru/about-ru']")
             end
 
             it "shows default to the default locale if no query string is added" do
-              visit refinery.link_to_admin_pages_dialogs_path(:wymeditor => true)
+              get refinery.link_to_admin_pages_dialogs_path(:wymeditor => true)
 
               page.should have_content("About")
               page.should have_selector("a[href='/about']")
@@ -702,14 +702,14 @@ module Refinery
             before { Refinery::Pages.absolute_page_links = true }
 
             it "shows Russian pages if we're editing the Russian locale" do
-              visit refinery.link_to_admin_pages_dialogs_path(:wymeditor => true, :switch_locale => :ru)
+              get refinery.link_to_admin_pages_dialogs_path(:wymeditor => true, :switch_locale => :ru)
 
               page.should have_content("About Ru")
               page.should have_selector("a[href='http://www.example.com/ru/about-ru']")
             end
 
             it "shows default to the default locale if no query string is added" do
-              visit refinery.link_to_admin_pages_dialogs_path(:wymeditor => true)
+              get refinery.link_to_admin_pages_dialogs_path(:wymeditor => true)
 
               page.should have_content("About")
               page.should have_selector("a[href='http://www.example.com/about']")
@@ -719,7 +719,7 @@ module Refinery
           # see https://github.com/refinery/refinerycms/pull/1583
           context "when switching locales" do
             specify "dialog has correct links", :js do
-              visit refinery.edit_admin_page_path(about_page)
+              get refinery.edit_admin_page_path(about_page)
 
               click_link "Add Link"
 

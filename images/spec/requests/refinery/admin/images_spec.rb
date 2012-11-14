@@ -6,20 +6,20 @@ module Refinery
 
     context "when no images" do
       it "invites to add one" do
-        visit refinery.admin_images_path
+        get refinery.admin_images_path
         page.should have_content(::I18n.t('no_images_yet', :scope => 'refinery.admin.images.records'))
       end
     end
 
     it "shows add new image link" do
-      visit refinery.admin_images_path
+      get refinery.admin_images_path
       page.should have_content(::I18n.t('create_new_image', :scope => 'refinery.admin.images.actions'))
       page.should have_selector("a[href*='#{refinery.new_admin_image_path}']")
     end
 
     context "new/create" do
       it "uploads image", :js => true do
-        visit refinery.admin_images_path
+        get refinery.admin_images_path
 
         click_link ::I18n.t('create_new_image', :scope => 'refinery.admin.images.actions')
 
@@ -48,7 +48,7 @@ module Refinery
 
       context "edit/update" do
         it "updates image" do
-          visit refinery.admin_images_path
+          get refinery.admin_images_path
           page.should have_selector("a[href='#{refinery.edit_admin_image_path(image)}']")
 
           click_link ::I18n.t('edit', :scope => 'refinery.admin.images')
@@ -66,7 +66,7 @@ module Refinery
         end
 
         it "doesn't allow updating if image has different file name" do
-          visit refinery.edit_admin_image_path(image)
+          get refinery.edit_admin_image_path(image)
 
           attach_file "image_image", Refinery.roots(:'refinery/images').join("spec/fixtures/fathead.png")
           click_button ::I18n.t('save', :scope => 'refinery.admin.form_actions')
@@ -78,7 +78,7 @@ module Refinery
 
       context "destroy" do
         it "removes image" do
-          visit refinery.admin_images_path
+          get refinery.admin_images_path
           page.should have_selector("a[href='#{refinery.admin_image_path(image)}']")
 
           click_link ::I18n.t('delete', :scope => 'refinery.admin.images')
@@ -90,7 +90,7 @@ module Refinery
 
       context "download" do
         it "succeeds" do
-          visit refinery.admin_images_path
+          get refinery.admin_images_path
 
           lambda { click_link "View this image" }.should_not raise_error
         end
@@ -98,7 +98,7 @@ module Refinery
 
       describe "switch view" do
         it "shows images in grid" do
-          visit refinery.admin_images_path
+          get refinery.admin_images_path
           page.should have_content(::I18n.t('switch_to', :view_name => 'list', :scope => 'refinery.admin.images.index.view'))
           page.should have_selector("a[href='#{refinery.admin_images_path(:view => 'list')}']")
 

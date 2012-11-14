@@ -5,7 +5,7 @@ describe "dashboard" do
 
   describe "quick tasks" do
     specify "buttons" do
-      visit refinery.admin_dashboard_path
+      get refinery.admin_dashboard_path
 
       page.should have_content(::I18n.t('quick_tasks', :scope => 'refinery.admin.dashboard.index'))
 
@@ -38,7 +38,7 @@ describe "dashboard" do
     end
 
     it "shows created tracked objects" do
-      visit refinery.admin_dashboard_path
+      get refinery.admin_dashboard_path
 
       page.should have_content("Latest Activity")
       3.times { |n| page.should have_content("Ugisozols#{n} user was added") }
@@ -52,7 +52,7 @@ describe "dashboard" do
       nested = FactoryGirl.create(:page, :parent_id => Refinery::Page.last.id,
                                          :updated_at => Time.now + 10.seconds)
 
-      visit refinery.admin_dashboard_path
+      get refinery.admin_dashboard_path
 
       page.should have_selector("a[href='#{refinery.edit_admin_page_path(nested.uncached_nested_url)}']")
     end

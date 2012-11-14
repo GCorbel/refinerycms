@@ -5,7 +5,7 @@ describe "User admin page" do
 
   describe "new/create" do
     def visit_and_fill_form
-      visit refinery.admin_users_path
+      get refinery.admin_users_path
       click_link "Add new user"
 
       fill_in "Username", :with => "test"
@@ -44,7 +44,7 @@ describe "User admin page" do
 
   describe "edit/update" do
     it "can update a user" do
-      visit refinery.admin_users_path
+      get refinery.admin_users_path
       click_link "Edit this user"
 
       fill_in "Username", :with => "cmsrefinery"
@@ -58,7 +58,7 @@ describe "User admin page" do
     let(:dotty_user) { FactoryGirl.create(:refinery_user, :username => 'user.name.with.lots.of.dots') }
     it "accepts a username with a '.' in it" do
       dotty_user # create the user
-      visit refinery.admin_users_path
+      get refinery.admin_users_path
 
       page.should have_css("#sortable_#{dotty_user.id}")
 
@@ -74,7 +74,7 @@ describe "User admin page" do
     let!(:user) { FactoryGirl.create(:user, :username => "ugisozols") }
 
     it "can only destroy regular users" do
-      visit refinery.admin_users_path
+      get refinery.admin_users_path
       page.should have_selector("a[href='/refinery/users/#{user.username}']")
       page.should have_no_selector("a[href='/refinery/users/#{logged_in_user.username}']")
 

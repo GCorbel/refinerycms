@@ -11,7 +11,7 @@ module Refinery
                               :password => "123456",
                               :password_confirmation => "123456")
 
-      visit refinery.login_path
+      get refinery.login_path
     end
 
     it "shows login form" do
@@ -49,7 +49,7 @@ module Refinery
     describe 'when there are no users' do
       it 'allows user creation' do
         # Verify that we can access the sign up page.
-        visit refinery.admin_root_path
+        get refinery.admin_root_path
         page.should have_content("There are no users yet, so we'll set you up first")
 
         # Fill in user details.
@@ -80,7 +80,7 @@ module Refinery
     end
 
     context "when visiting a protected path" do
-      before { visit protected_path }
+      before { get protected_path }
 
       it "redirects to the login" do
         current_path.should == login_path

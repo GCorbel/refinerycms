@@ -10,7 +10,7 @@ module Refinery
 
     describe 'body' do
       it "id is the page's canonical id" do
-        visit home_page.url
+        get home_page.url
 
         page.should have_css 'body#home-page'
       end
